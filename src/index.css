@@ -66,3 +66,17 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+button {
+  background-color: pink;
+  margin:5px;
+}
+input{
+  background-color: grey;
+  border: 2px dashed pink;
+}
+h2{
+
+  background-color: pink;
+}

@@ -1,36 +1,43 @@
 import { useState } from "react"
 
-const SignUpForm = ({setToken}) => {
+const SignUpForm = ({ setToken }) => {
     const [userName, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [validationError, setValidationError] = useState(false)
     const [error, setError] = useState(null);
 
     const handleSubmit = async (event) => {
-        try{
+        try {
             event.preventDefault();
 
-        console.log('short message');
+            setValidationError(false)
+            if (userName.length < 8) {
+                setValidationError(true)
+                return
+            }
 
-        const response = await fetch('https://fsa-jwt-practice.herokuapp.com/signup', 
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-                
-            },
-            body: JSON.stringify({
-                username: userName,
-                password: password
-            })
-        })
+            // console.log('short message');
 
-        const jsonResponse = await response.json()
-        console.log(jsonResponse);
+            const response = await fetch('https://fsa-jwt-practice.herokuapp.com/signup',
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
 
-        setToken(jsonResponse.token);
-        
+                    },
+                    body: JSON.stringify({
+                        username: userName,
+                        password: password
+                    })
+                })
 
-        } catch (error){
+            const jsonResponse = await response.json()
+            // console.log(jsonResponse);
+
+            setToken(jsonResponse.token);
+
+
+        } catch (error) {
             setError(error.message)
         }
     }
@@ -42,10 +49,12 @@ const SignUpForm = ({setToken}) => {
 
             {error && <p>{error}</p>} {/*what is this &&*/}
 
-            <form onSubmit = {handleSubmit}>
-                <label> Username: <input value={userName} onChange = { (event) => setUsername(event.target.value) }/></label>
+            {validationError && <p>Make sure your username is at least 8 characters</p>}
 
-                <label> Password: <input value={password} onChange = { (event) => setPassword(event.target.value)}/></label>
+            <form onSubmit={handleSubmit}>
+                <label> Username: <input value={userName} onChange={(event) => setUsername(event.target.value)} /></label>
+
+                <label> Password: <input value={password} onChange={(event) => setPassword(event.target.value)} /></label>
 
                 <button>Submit</button>
             </form>
